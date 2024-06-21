@@ -1,11 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Box, Typography, Paper, IconButton, Divider } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
-const OrderSummary = ({ onTotalChange }) => {
+const OrderSummary = () => {
   const [items, setItems] = useState([]);
   const [total, setTotal] = useState(0);
+
+  const calculateTotal = useCallback((items) => {  // useCallback to memoize the function
+    const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
+    setTotal(totalPrice);
+  }, []);
 
   useEffect(() => {
     const fetchRandomProducts = async () => {
@@ -20,17 +25,11 @@ const OrderSummary = ({ onTotalChange }) => {
     };
 
     fetchRandomProducts();
-  }, []);
+  }, [calculateTotal]);  // Added calculateTotal as a dependency
 
   const getRandomProducts = (products, count) => {
     const shuffled = products.sort(() => 0.5 - Math.random());
     return shuffled.slice(0, count);
-  };
-
-  const calculateTotal = (items) => {
-    const totalPrice = items.reduce((acc, item) => acc + item.price, 0);
-    setTotal(totalPrice);
-    onTotalChange(totalPrice); // Notify parent component (App.js) of the total amount
   };
 
   const removeItem = (index) => {

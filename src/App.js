@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Container, CssBaseline, Typography } from '@mui/material';
+import { Container, CssBaseline } from '@mui/material';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import OrderSummary from './components/OrderSummary';
