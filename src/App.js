@@ -1,25 +1,33 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { Container, CssBaseline, Typography } from '@mui/material';
+import { Elements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
+import OrderSummary from './components/OrderSummary';
+import CheckoutForm from './components/CheckoutForm';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import './App.css';
 
-function App() {
+const stripePromise = loadStripe('your-publishable-key-here');
+
+const App = () => {
+  const [amountToCharge, setAmountToCharge] = useState(0);
+
+  const handleTotalChange = (total) => {
+    setAmountToCharge(total);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Elements stripe={stripePromise}>
+      <CssBaseline />
+      <Header />
+      <Container style={{padding:16}}>
+        <OrderSummary onTotalChange={handleTotalChange} />
+        <CheckoutForm amountToCharge={amountToCharge} />
+      </Container>
+      <Footer />
+    </Elements>
   );
-}
+};
 
 export default App;
